@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="all" name="Create Runnable Jar for Project java-git">
+	<target name="all" depends="compile,create_jar">
+	</target>
+	<target name="compile" description="Compilation target">
+		<delete dir="bin" />
+		<mkdir dir="bin" />
+		<javac target="1.5" srcdir="src" destdir="bin" classpath="lib/json.jar;lib/plugin.jar;" />
+	</target>
+
+	<taskdef name="JarOpt" classname="org.cmc.jaroptimizer.JarOptTask" classpath="lib/jaropt.jar" />
+	<target name="create_jar">
+		<jar destfile="unstripped.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="com.mavient.fileify.FileService" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="bin" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/json.jar" />
+			<fileset dir="lib" excludes="*.jar" />
+		</jar>
+		<JarOpt src="unstripped.jar" dst="fileify.jar" stripNonClassFiles="false">
+			<includePattern>name.colyer.matt.*</includePattern>
+		</JarOpt>
+		<signjar jar="fileify.jar" alias="fileify" storepass="secret" />
+	</target>
+</project>

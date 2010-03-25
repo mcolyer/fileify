@@ -1,0 +1,73 @@
+= fileify
+Allows Javascript applications to read and write local files, through the
+use of a privileged applet.
+
+This code has been derived from http://gitify.com, a 100% web based git client.
+
+Some refer to this method as JAHA, in true four letter Web 2.0 fashion.
+http://windyroad.org/2006/08/14/reintroducing-javascript-and-hidden-applets-jaha/
+
+= Example
+ <html>
+   <head>
+   </head>
+   <body>
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+     <script src="fileify.js"></script>
+     <script>
+       $(document).bind('fileifyready', function(){
+         var filename = "/tmp/test";
+     
+         // Read a file
+         var result = Fileify.read(filename);
+         if (result["error"] == undefined){
+           console.log("Success: "+result["data"]);
+         }else{
+           console.log("Error: "+result["error"]);
+         }
+     
+         // Overwrite a file
+         result = Fileify.write(filename, "Hello World");
+         if (result["error"] == undefined){
+           console.log("Success");
+         }else{
+           console.log("Failure: "+result["error"]);
+         }
+       });
+     </script>
+   </body>
+ </html>
+
+== How to build
+In order to build fileify for your own site you'll need git, Eclipse (3.5 or
+greater) and the Java 1.6 JDK.
+
+* git clone http://github.com/mcolyer/fileify.git
+* Launch eclipse 
+* From the File menu choose "Import" and then "Existing Projects into
+  Workspace" and select the git checkout you made in step 1.
+* Fix any library reference errors (I use Ubuntu to develop, so it's likely the
+  files moved if you aren't using Ubuntu)
+* Next you'll need to create a keystore to sign the applet so it can run
+  privileged. 
+* Use the following to generate the keystore:
+  "keytool -genkeypair -alias fileify -keypass secret -storepass secret -validity 365"
+  Answer the questions as prompted.
+* You should now be able to right click the build.xml file in eclipse and build
+  the all target.
+* There should now be a fileify.jar in the root of the git checkout, which you
+  can place in the root of your application.
+
+== How to contribute
+* First fork the repository using github.
+* Create a branch for your feature or fix with an appropriate name.
+* Make your changes and create any relevant test cases (see tests/) and then
+  push to github.
+* Create a github ticket with a link to the relevant branch that you think
+  should be merged. Briefly describe what is going on in the ticket
+
+== Related Links
+* http://www.tiddlywiki.com/#TiddlySaver - An applet used by the Tiddlywiki
+  project to save, similar but less generic.
+* http://www.w3.org/TR/2009/WD-FileAPI-20091117/ - W3C's proposal for a read
+  only file API (used in FF 3.6)

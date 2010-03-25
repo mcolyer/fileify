@@ -1,0 +1,29 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="../js/fileify.js"></script>
+    <script>
+     $(document).bind('fileifyready', function(){
+       var filename = "/tmp/test";
+   
+       // Read a file
+       var result = Fileify.read(filename);
+       if (result["error"] == undefined){
+         console.log("Success: "+result["data"]);
+       }else{
+         console.log("Error: "+result["error"]);
+       }
+   
+       // Overwrite a file
+       result = Fileify.write(filename, "Hello World");
+       if (result["error"] == undefined){
+         console.log("Success");
+       }else{
+         console.log("Failure: "+result["error"]);
+       }
+     });
+    </script>
+  </body>
+</html>
